@@ -5,6 +5,8 @@ import time
 import subprocess
 import select
 
+import apache_log_parser
+from apache_log_parser import LineDoesntMatchException
 
 if __name__ == '__main__':
     #Default values
@@ -25,9 +27,18 @@ if __name__ == '__main__':
     p = select.poll()
     p.register(f.stdout)
 
+    log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
+
+
     while True:
         if p.poll(1):
-            print(f.stdout.readline())
+            try:
+                log_line = f.stdout.readline()
+                parts = log_parser(str(log_line))
+                print(parts)
+            except LineDoesntMatchException:
+                print(f"log found that did not match parsing: {log_line}", file=sys.stderr)
+                pass
         time.sleep(1)    
     
         
