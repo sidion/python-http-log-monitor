@@ -43,19 +43,33 @@ class LogReporter:
         end_of_window = datetime.datetime.now() - datetime.timedelta(seconds=window)
         stats = {}
         stats['number_of_requests'] = 0
+        stats['total_response_bytes'] = 0
+        stats['total_get_requests'] = 0
+        stats['total_post_requests'] = 0
         sections = {}
+        ip_addrs = set()
 
         for log in self._logs:
             if log['time_received_datetimeobj'] > end_of_window:
                 #add log to stats
                 stats['number_of_requests'] += 1
+                stats['total_response_bytes'] += int(log['response_bytes'])
+                if log['request_method'] == 'GET':
+                    stats['total_get_requests'] += 1 
+                if log['request_method'] == 'POST':
+                    stats['total_post_requests'] += 1
+                ip_addrs.add(log['remote_host'])
+
                 section = re.match(r'^\/(.*?)(\/|$)', log['request_url']).group(1)
                 if section not in sections:
                     sections[section] = 0
                 else:
                     sections[section] += 1
+            
             else:
                 break
+        
+        stats['number_of_unique_ips'] = len(ip_addrs)
         
         most_hit_section = ['none', -math.inf]
         for section in sections:

@@ -25,7 +25,7 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
 
     log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
 
-    size_of_top_data = 7
+    size_of_top_data = 8
 
     #-1 required to keep the bottom line of the terminal for the curses and prevent curses exception
     number_of_logs_to_show = curses.LINES - size_of_top_data -1
@@ -53,7 +53,7 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
             requests_per_sec_in_alert_window = reporter.getRequestPerSecondForWindow(alert_window)
             if requests_per_sec_in_alert_window >= alert_threshold:
                 current_state = 'ALERT'
-                alert_string = f" - hits = {requests_per_sec_in_alert_window}, triggered at {now.strftime('%H:%M:%S')}"                
+                alert_string = f" High traffic generated an alert - hits = {requests_per_sec_in_alert_window}, triggered at {now.strftime('%H:%M:%S')}"                
             elif current_state == 'ALERT':
                 current_state = "RECOVERED"
                 alert_string = ''
@@ -74,7 +74,8 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
         line_index = 3
         
         for key in stats:
-            display_string = f"{key}: {stats[key]}"
+            name = key.replace("_", " ")
+            display_string = f"{name}: {stats[key]}"
             stdscr.addstr(line_index, 0, display_string[:curses.COLS])
             line_index += 1
         
