@@ -1,6 +1,8 @@
 import collections
 from collections import deque
 import datetime
+import re
+import math
 
 class LogReporter:
     
@@ -23,12 +25,26 @@ class LogReporter:
         end_of_window = datetime.datetime.now() - datetime.timedelta(seconds=window)
         stats = {}
         stats['number_of_requests'] = 0
+        sections = {}
+
         for log in self._logs:
             if log['time_received_datetimeobj'] > end_of_window:
                 #add log to stats
                 stats['number_of_requests'] += 1
+                section = re.match(r'^\/(.*?)(\/|$)', log['request_url']).group(1)
+                if section not in sections:
+                    sections[section] = 0
+                else:
+                    sections[section] += 1
             else:
                 break
+        
+        most_hit_section = ['none', -math.inf]
+        for section in sections:
+            if sections[section] > most_hit_section[1]:
+                most_hit_section = [section, sections[section]]
+        stats['most_hit_section'] = most_hit_section[0]
+                
         return stats
 
     
