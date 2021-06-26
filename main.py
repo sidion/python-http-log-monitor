@@ -1,10 +1,9 @@
-from logreporter import LogReporter
 import sys
 import argparse
 import configparser
 import curses
 
-import httplogparser
+from src import httplogparser
  
 def main() -> int:
     config = configparser.ConfigParser()
