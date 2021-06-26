@@ -43,7 +43,6 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
     current_state = 'Nominal'
     alert_string = ''
     current_window = ''
-    requests_per_sec_in_alert_window = 0
     #main process loop
     while True:
         now = datetime.datetime.now()
@@ -85,7 +84,7 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
         stdscr.refresh()
 
         # injest new data
-        if p.poll(1): 
+        while p.poll(1): 
             try:
                 log_line = f.stdout.readline()
                 display_log_queue.append(log_line)
@@ -94,7 +93,7 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
                 print(f"log found that did not match parsing: {log_line}", file=sys.stderr)
                 pass
 
-        time.sleep(0.3)    
+        time.sleep(1)    
         if stdscr.getch() != curses.ERR:
             #user input detected exit
             break
@@ -120,11 +119,11 @@ def main() -> int:
         if arguments.file:
             FILE_LOCATION = arguments.file
         if arguments.alertwindow:
-            ALERT_WINDOW_LENGTH = arguments.alertwinow
+            ALERT_WINDOW_LENGTH = int(arguments.alertwindow)
         if arguments.alertthreshold:
-            ALERT_THRESHOLD = arguments.alertthreshold
+            ALERT_THRESHOLD = int(arguments.alertthreshold)
         if arguments.statwindow:
-            STAT_WINDOW_LENGTH = arguments.statwindow
+            STAT_WINDOW_LENGTH =int(arguments.statwindow)
 
     return curses.wrapper(c_main, FILE_LOCATION, ALERT_WINDOW_LENGTH, ALERT_THRESHOLD, STAT_WINDOW_LENGTH)
 
