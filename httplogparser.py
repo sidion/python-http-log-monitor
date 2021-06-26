@@ -1,5 +1,5 @@
 import curses
-
+import sys
 import time
 import subprocess
 import select
@@ -16,7 +16,7 @@ import logreporter
 
 class HttpLogParser:
 
-    def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window) -> int:
+    def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
         #tail subprocess and log parser setup
         #the use of sh.tail will limit this appliation to only working on *nix systems with the tail command
         f = subprocess.Popen(['tail','-F', log_file], stdout=subprocess.PIPE )
