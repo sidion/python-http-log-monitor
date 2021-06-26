@@ -13,3 +13,13 @@ Initial Requirements statement:
 
 
 https://github.com/kiritbasu/Fake-Apache-Log-Generator was a useful tool in generating test data though note its python 2.7 requirement
+
+
+
+improvements
+- dynamic terminal window resizing
+- abstract reporter, log parser and subprocess in c_main  as a parameter for better SOLID alignment
+- create a more robust log parser that can handle multiple files or a queue service like aws SQS or RabitMQ
+- allow for logs to be passed in via stdin vs a file read
+- ensure type definition on all paramters and function return values
+- take better advantage of horizontal space in the stats section
