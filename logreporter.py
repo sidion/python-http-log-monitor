@@ -1,6 +1,7 @@
 import collections
 from collections import deque
 import datetime
+from os import fwalk
 import re
 import math
 
@@ -91,4 +92,12 @@ class LogReporter:
         total_logs_in_window = len(self._logs) - logs_not_counted
         return int(total_logs_in_window / window)
 
+    #helper function to determin if current state should be considered an alert state
+    #alert_window is time in seconds of the length of window
+    #alert_threshold is requests per second that should trigger an alert
+    def isInAlertState(self, alert_window, alert_threshold):
+        requests_per_second = self.getRequestPerSecondForWindow(alert_window)
+        if requests_per_second >= alert_threshold:
+            return [True, requests_per_second]
+        return [False, 0]
     
