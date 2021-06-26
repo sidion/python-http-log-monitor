@@ -1,6 +1,7 @@
 from logreporter import LogReporter
 import sys
 import argparse
+import configparser
 
 import curses
 
@@ -102,11 +103,15 @@ def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_thresho
  
 def main() -> int:
     #Default values
-    #TODO: move to config file
-    FILE_LOCATION = '/tmp/access.log'
-    ALERT_WINDOW_LENGTH = 120
-    ALERT_THRESHOLD = 10
-    STAT_WINDOW_LENGTH = 10
+
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    default_config = config['default']
+
+    FILE_LOCATION = default_config.get('FILE_LOCATION', 'tmp/access.log')
+    ALERT_WINDOW_LENGTH = default_config.getint('ALERT_WINDOW_LENGTH', 120)
+    ALERT_THRESHOLD = default_config.getint('ALERT_THRESHOLD', 10)
+    STAT_WINDOW_LENGTH = default_config.getint('STAT_WINDOW_LENGTH', 10)
 
     if len(sys.argv) > 1:
         #user submitted command line args parsing
