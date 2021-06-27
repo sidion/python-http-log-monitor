@@ -40,6 +40,7 @@ class HttpLogParser:
         display_log_queue = collections.deque([],number_of_logs_to_show)
         current_state = 'Nominal'
         alert_string = ''
+        recovery_string = ''
         current_window = ''
         stdscr.nodelay(True) #prevent blocking input
 
@@ -54,10 +55,13 @@ class HttpLogParser:
                 alertstate = reporter.isInAlertState(alert_window, alert_threshold)
                 #alertstate will be either [False, 0] or [True, #of Requests/second]
                 if alertstate[0]:
+                    if current_state != 'ALERT':
+                        alert_string = f" High traffic generated an alert - hits = {alertstate[1]}, triggered at {now.strftime('%H:%M:%S')}"                
                     current_state = 'ALERT'
-                    alert_string = f" High traffic generated an alert - hits = {alertstate[1]}, triggered at {now.strftime('%H:%M:%S')}"                
+                    recovery_string = ''
                 elif current_state == 'ALERT':
                     current_state = "RECOVERED"
+                    recovery_string = f" recovered at {now.strftime('%H:%M:%S')}"
                     alert_string = ''
                 else:
                     current_state = 'Nominal'
@@ -73,6 +77,9 @@ class HttpLogParser:
             stdscr.addstr(2,0, f"STATUS: {current_state}")
             if current_state == 'ALERT':
                 stdscr.addstr(2, 14, alert_string)
+            if current_state == 'RECOVERED':
+                stdscr.addstr(2, 18, recovery_string)
+
             line_index = 3
             
             for key in stats:
