@@ -33,6 +33,7 @@ def main() -> int:
         if arguments.statwindow:
             STAT_WINDOW_LENGTH =int(arguments.statwindow)
 
+    # this wrapper handles returning the terminal window to its previous state on appliation exit
     return curses.wrapper(httplogparser.HttpLogParser.c_main, FILE_LOCATION, ALERT_WINDOW_LENGTH, ALERT_THRESHOLD, STAT_WINDOW_LENGTH)
 
 

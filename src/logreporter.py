@@ -11,20 +11,21 @@ class LogReporter:
         #deque is more optomoized for interacting with both ends of the list
         #so will be more run time effiecent that a simple list
         self._logs = collections.deque([])
-        #a log with a timestamp older than now - _retention time should be removed
+        #a log with a timestamp older than now - _retention time will be purgeable
         self._retention_time = retention_time 
 
     #adds a new log to internal log list
     #log should be in Dict object format
+    #TODO: move log parsing to here
     def addLog(self, log) -> bool:
         self._logs.appendleft(log)
         return True
 
 
-    #implicit call to prune logs past retention period
-    #a call to this could be included in the addLog or get stats function to make the model
+    #Call to prune logs past retention period
+    #a call to this function could be included in the addLog or get stats function to make the model
     #self prune but i am leaving to be controlled in the higher level for more flexibility on
-    #frequency of its call
+    #frequency of its call at this time
     def pruneLogs(self) -> bool:
         end_of_retention = datetime.datetime.now() - datetime.timedelta(seconds=self._retention_time)
         logs_to_remove = 0
@@ -61,6 +62,10 @@ class LogReporter:
                     stats['total_post_requests'] += 1
                 ip_addrs.add(log['remote_host'])
 
+                #a section is defined as the text before the 2nd /
+                #i have also chosen to include the text after the first / if there is no
+                #second /
+                # if this is undesireable, the regex would need to be changed to '^\/(.*)?\/'
                 section = re.match(r'^\/(.*?)(\/|$)', log['request_url']).group(1)
                 if section not in sections:
                     sections[section] = 0
@@ -95,6 +100,8 @@ class LogReporter:
     #helper function to determin if current state should be considered an alert state
     #alert_window is time in seconds of the length of window
     #alert_threshold is requests per second that should trigger an alert
+    #TODO: the return format of this function is a bit of a code smell; it is doing 2 things
+    #      and functions should only do 1 thing, it works for now but is worth thinking about
     def isInAlertState(self, alert_window, alert_threshold):
         requests_per_second = self.getRequestPerSecondForWindow(alert_window)
         if requests_per_second >= alert_threshold:

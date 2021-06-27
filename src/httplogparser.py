@@ -17,11 +17,14 @@ from src import logreporter
 class HttpLogParser:
 
     def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
+        #c_main is a naming covention indicating this is a curses main
+
         #tail subprocess and log parser setup
         #the use of sh.tail will limit this appliation to only working on *nix systems with the tail command
         f = subprocess.Popen(['tail','-F', log_file], stdout=subprocess.PIPE )
         p = select.poll()
         p.register(f.stdout)
+        #TODO: refactor log parser into LogReporter 
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
         
         #reporter internal data structure setup
@@ -31,8 +34,8 @@ class HttpLogParser:
         stats = {} #initialize stats reporting object
 
         #curses display setup
-        #-1 required to keep the bottom line of the terminal for the curses and prevent curses exception
         size_of_top_data = 8
+        #-1 required to keep the bottom line of the terminal for the curses and prevent curses exception
         number_of_logs_to_show = curses.LINES - size_of_top_data -1
         display_log_queue = collections.deque([],number_of_logs_to_show)
         current_state = 'Nominal'
@@ -49,6 +52,7 @@ class HttpLogParser:
 
                 #TODO explore option of alert reporting in every loop for faster notification of alert
                 alertstate = reporter.isInAlertState(alert_window, alert_threshold)
+                #alertstate will be either [False, 0] or [True, #of Requests/second]
                 if alertstate[0]:
                     current_state = 'ALERT'
                     alert_string = f" High traffic generated an alert - hits = {alertstate[1]}, triggered at {now.strftime('%H:%M:%S')}"                
@@ -92,6 +96,8 @@ class HttpLogParser:
                     print(f"log found that did not match parsing: {log_line}", file=sys.stderr)
                     pass
 
+            #sleep not only reduces system impact but also prevents stats processes from happening
+            #more than once within 1s
             time.sleep(1)    
             if stdscr.getch() != curses.ERR:
                 #user input detected exit
