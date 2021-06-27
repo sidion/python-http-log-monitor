@@ -1,0 +1,13 @@
+apache-log-parser==1.7.0
+attrs==21.2.0
+configparser==5.0.2
+iniconfig==1.1.1
+packaging==20.9
+pluggy==0.13.1
+py==1.10.0
+pyparsing==2.4.7
+pytest==6.2.4
+six==1.16.0
+toml==0.10.2
+ua-parser==0.10.0
+user-agents==2.2.0
