@@ -21,5 +21,6 @@ improvements
 - abstract reporter, log parser and subprocess in c_main  as a parameter for better SOLID alignment
 - create a more robust log parser that can handle multiple files or a queue service like aws SQS or RabitMQ
 - allow for logs to be passed in via stdin vs a file read
+- apachy log parser does not parse timezone offset correctly, open bug: https://github.com/amandasaurus/apache-log-parser/issues/19
 - ensure type definition on all paramters and function return values
 - take better advantage of horizontal space in the stats section
