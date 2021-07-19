@@ -1,5 +1,5 @@
 # HTTP log monitor
-*Take home project for Datadog*
+A live http log monitor application inspired by Top
 
 Initial Requirements statement:
 
