@@ -16,7 +16,7 @@ from src import logreporter
 
 class HttpLogParser:
 
-    def c_main(self, stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
+    def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
         #c_main is a naming covention indicating this is a curses main
 
         #tail subprocess and log parser setup
