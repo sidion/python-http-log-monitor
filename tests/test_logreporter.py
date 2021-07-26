@@ -63,7 +63,7 @@ class TestLogReporter:
     def test_pruneLog(self, reporter_without_retention):
         self.addLogsToReporter(reporter_without_retention, 10)
         time.sleep(1)  #TODO mock time change instead of sleep for faster test run
-        reporter_without_retention.pruneLogs()
+        reporter_without_retention.prune_logs()
         assert len(reporter_without_retention._logs) == 0
 
     def test_transition_to_alert(self, base_reporter):
@@ -74,5 +74,5 @@ class TestLogReporter:
     def test_transition_out_of_alert(self, reporter_without_retention):
         self.addLogsToReporter(reporter_without_retention, 10)
         assert reporter_without_retention.isInAlertState(10,1) == [True, 1]
-        reporter_without_retention.pruneLogs()
+        reporter_without_retention.prune_logs()
         assert reporter_without_retention.isInAlertState(10,1) == [False, 0]

@@ -63,7 +63,7 @@ class HttpLogParser:
                 else:
                     current_state = 'Nominal'
 
-                reporter.pruneLogs()
+                reporter.prune_logs()
 
             #render data
             stdscr.clear()

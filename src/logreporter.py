@@ -24,7 +24,7 @@ class LogReporter:
     #a call to this function could be included in the addLog or get stats function to make the model
     #self prune but i am leaving to be controlled in the higher level for more flexibility on
     #frequency of its call at this time
-    def pruneLogs(self) -> bool:
+    def prune_logs(self) -> bool:
         end_of_retention = datetime.datetime.now() - datetime.timedelta(seconds=self._retention_time)
         logs_to_remove = 0
         for log in reversed(self._logs):
