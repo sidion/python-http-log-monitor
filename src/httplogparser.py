@@ -16,17 +16,17 @@ from src import logreporter
 
 class HttpLogParser:
 
-    def c_main(stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
+    def c_main(self, stdscr: 'curses._CursesWindow', log_file, alert_window, alert_threshold, stat_window):
         #c_main is a naming covention indicating this is a curses main
 
         #tail subprocess and log parser setup
         #the use of sh.tail will limit this appliation to only working on *nix systems with the tail command
-        f = subprocess.Popen(['tail','-F', log_file], stdout=subprocess.PIPE )
-        p = select.poll()
-        p.register(f.stdout)
-        #TODO: refactor log parser into LogReporter 
+        tail_sub_process = subprocess.Popen(['tail','-F', log_file], stdout=subprocess.PIPE )
+        polling = select.poll()
+        polling.register(tail_sub_process.stdout)
+        #TODO: refactor log parser into LogReporter
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
-        
+
         #reporter internal data structure setup
         #set log retention length to alter_window + stat_window to ensure we always have the data we need
         #but don't introduce any memory leaks
@@ -81,22 +81,22 @@ class HttpLogParser:
                 stdscr.addstr(2, 18, recovery_string)
 
             line_index = 3
-            
+
             for key in stats:
                 name = key.replace("_", " ")
                 display_string = f"{name}: {stats[key]}"
                 stdscr.addstr(line_index, 0, display_string[:curses.COLS])
                 line_index += 1
-            
+
             for idx, log in enumerate(display_log_queue):
                 stdscr.addstr(idx + size_of_top_data, 0, log[:curses.COLS])
 
             stdscr.refresh()
 
             # injest new data
-            while p.poll(1): 
+            while polling.poll(1): 
                 try:
-                    log_line = f.stdout.readline()
+                    log_line = tail_sub_process.stdout.readline()
                     display_log_queue.append(log_line)
                     reporter.addLog( log_parser(str(log_line)) )
                 except LineDoesntMatchException:

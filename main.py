@@ -4,16 +4,17 @@ import configparser
 import curses
 
 from src import httplogparser
- 
+
 def main() -> int:
+    '''Main function, a wrapper to handle program inputs and pass them to the internal program'''
     config = configparser.ConfigParser()
     config.read('config.ini')
     default_config = config['default']
 
-    FILE_LOCATION = default_config.get('FILE_LOCATION', 'tmp/access.log')
-    ALERT_WINDOW_LENGTH = default_config.getint('ALERT_WINDOW_LENGTH', 120)
-    ALERT_THRESHOLD = default_config.getint('ALERT_THRESHOLD', 10)
-    STAT_WINDOW_LENGTH = default_config.getint('STAT_WINDOW_LENGTH', 10)
+    file_location = default_config.get('FILE_LOCATION', 'tmp/access.log')
+    alert_window_length = default_config.getint('ALERT_WINDOW_LENGTH', 120)
+    alert_threshold = default_config.getint('ALERT_THRESHOLD', 10)
+    stat_window_length = default_config.getint('STAT_WINDOW_LENGTH', 10)
 
     if len(sys.argv) > 1:
         #user submitted command line args parsing
@@ -25,18 +26,23 @@ def main() -> int:
         arguments = parser.parse_args()
 
         if arguments.file:
-            FILE_LOCATION = arguments.file
+            file_location = arguments.file
         if arguments.alertwindow:
-            ALERT_WINDOW_LENGTH = int(arguments.alertwindow)
+            alert_window_length = int(arguments.alertwindow)
         if arguments.alertthreshold:
-            ALERT_THRESHOLD = int(arguments.alertthreshold)
+            alert_threshold = int(arguments.alertthreshold)
         if arguments.statwindow:
-            STAT_WINDOW_LENGTH =int(arguments.statwindow)
+            stat_window_length =int(arguments.statwindow)
 
     # this wrapper handles returning the terminal window to its previous state on appliation exit
-    return curses.wrapper(httplogparser.HttpLogParser.c_main, FILE_LOCATION, ALERT_WINDOW_LENGTH, ALERT_THRESHOLD, STAT_WINDOW_LENGTH)
+    return curses.wrapper(httplogparser.
+                            HttpLogParser.c_main,
+                            file_location,
+                            alert_window_length,
+                            alert_threshold,
+                            stat_window_length)
 
 
 if __name__ == '__main__':
-    exit(main())
+    sys.exit(main())
       

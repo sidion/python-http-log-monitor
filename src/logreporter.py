@@ -12,7 +12,7 @@ class LogReporter:
         #so will be more run time effiecent that a simple list
         self._logs = collections.deque([])
         #a log with a timestamp older than now - _retention time will be purgeable
-        self._retention_time = retention_time 
+        self._retention_time = retention_time
 
     #adds a new log to internal log list
     #log should be in Dict object format
@@ -36,7 +36,7 @@ class LogReporter:
                 break
         if logs_to_remove > 0:
             self._logs = collections.deque(list(self._logs)[:-logs_to_remove])
-        return True   
+        return True
 
 
     #return a Dict of intersting data for the window
@@ -71,12 +71,12 @@ class LogReporter:
                     sections[section] = 0
                 else:
                     sections[section] += 1
-            
+
             else:
                 break
-        
+
         stats['number_of_unique_ips'] = len(ip_addrs)
-        
+
         most_hit_section = ['none', -math.inf]
         for section in sections:
             if sections[section] > most_hit_section[1]:
