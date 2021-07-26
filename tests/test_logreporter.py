@@ -6,7 +6,7 @@ from src import logreporter
 
 class TestLogReporter:
 
-    def addLogsToReporter(self, reporter, number_of_logs):
+    def add_logs_to_reporter(self, reporter, number_of_logs):
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
         for idx in range(number_of_logs):
             now = datetime.datetime.now(datetime.timezone.utc).astimezone().strftime('%d/%b/%Y:%H:%M:%S %z')
@@ -26,7 +26,7 @@ class TestLogReporter:
 
     @pytest.fixture
     def reporter_with_10_logs(self, base_reporter):
-        self.addLogsToReporter(base_reporter, 10)
+        self.add_logs_to_reporter(base_reporter, 10)
         return base_reporter
 
     def test_init(base_reporter):
@@ -60,19 +60,19 @@ class TestLogReporter:
         assert stats['number_of_unique_ips'] == 1
         assert stats['most_hit_section'] == 'report'
 
-    def test_pruneLog(self, reporter_without_retention):
-        self.addLogsToReporter(reporter_without_retention, 10)
+    def test_prune_log(self, reporter_without_retention):
+        self.add_logs_to_reporter(reporter_without_retention, 10)
         time.sleep(1)  #TODO mock time change instead of sleep for faster test run
         reporter_without_retention.prune_logs()
         assert len(reporter_without_retention._logs) == 0
 
     def test_transition_to_alert(self, base_reporter):
         assert base_reporter.is_in_alert_state(10,1) == [False, 0]
-        self.addLogsToReporter(base_reporter, 10)
+        self.add_logs_to_reporter(base_reporter, 10)
         assert base_reporter.is_in_alert_state(10,1) == [True, 1]
 
     def test_transition_out_of_alert(self, reporter_without_retention):
-        self.addLogsToReporter(reporter_without_retention, 10)
+        self.add_logs_to_reporter(reporter_without_retention, 10)
         assert reporter_without_retention.is_in_alert_state(10,1) == [True, 1]
         reporter_without_retention.prune_logs()
         assert reporter_without_retention.is_in_alert_state(10,1) == [False, 0]
