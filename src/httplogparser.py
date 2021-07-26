@@ -3,14 +3,11 @@ import sys
 import time
 import subprocess
 import select
+import collections
+import datetime
 
 import apache_log_parser
 from apache_log_parser import LineDoesntMatchException
-
-import collections
-from collections import deque
-
-import datetime
 
 from src import logreporter
 
@@ -94,7 +91,7 @@ class HttpLogParser:
             stdscr.refresh()
 
             # injest new data
-            while polling.poll(1): 
+            while polling.poll(1):
                 try:
                     log_line = tail_sub_process.stdout.readline()
                     display_log_queue.append(log_line)
