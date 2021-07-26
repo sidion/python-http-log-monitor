@@ -15,7 +15,7 @@ class LogReporter:
     #adds a new log to internal log list
     #log should be in Dict object format
     #TODO: move log parsing to here
-    def addLog(self, log) -> bool:
+    def add_log(self, log) -> bool:
         self._logs.appendleft(log)
         return True
 

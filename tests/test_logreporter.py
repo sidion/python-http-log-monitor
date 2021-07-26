@@ -10,7 +10,7 @@ class TestLogReporter:
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
         for idx in range(number_of_logs):
             now = datetime.datetime.now(datetime.timezone.utc).astimezone().strftime('%d/%b/%Y:%H:%M:%S %z')
-            reporter.addLog( log_parser(f"127.0.0.1 - james [{now}] \"GET /report/idx HTTP/1.0\" 200 123"))
+            reporter.add_log( log_parser(f"127.0.0.1 - james [{now}] \"GET /report/idx HTTP/1.0\" 200 123"))
         
 
     def test_file_is_fuctional(self):
@@ -42,7 +42,7 @@ class TestLogReporter:
         #a mocked object log generate via a factory
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
         log = log_parser('127.0.0.1 - james [09/May/2018:16:00:39 +0000] "GET /report HTTP/1.0" 200 123')
-        assert base_reporter.addLog(log)
+        assert base_reporter.add_log(log)
 
     def test_getRequestPerSecondForWindow(self, reporter_with_10_logs):
         assert reporter_with_10_logs.getRequestPerSecondForWindow(10) == 1

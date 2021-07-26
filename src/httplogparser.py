@@ -95,7 +95,7 @@ class HttpLogParser:
                 try:
                     log_line = tail_sub_process.stdout.readline()
                     display_log_queue.append(log_line)
-                    reporter.addLog( log_parser(str(log_line)) )
+                    reporter.add_log( log_parser(str(log_line)) )
                 except LineDoesntMatchException:
                     print(f"log found that did not match parsing: {log_line}", file=sys.stderr)
                     pass
