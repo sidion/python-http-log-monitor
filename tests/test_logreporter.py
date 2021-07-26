@@ -37,7 +37,7 @@ class TestLogReporter:
         assert my_log_reporter._retention_time == 300
 
 
-    def test_addLog(self, base_reporter):
+    def test_add_log(self, base_reporter):
         #note this is a very bad test as we should not be parsing a string here but providing the test
         #a mocked object log generate via a factory
         log_parser = apache_log_parser.make_parser('%h %u %l %t "%r" %s %B')
@@ -47,8 +47,8 @@ class TestLogReporter:
     def test_get_request_per_second_for_window(self, reporter_with_10_logs):
         assert reporter_with_10_logs.get_request_per_second_for_window(10) == 1
 
-    def test_isInAlertState(self, reporter_with_10_logs):
-        assert reporter_with_10_logs.isInAlertState(10, 1) == [True, 1]
+    def test_is_in_alert_state(self, reporter_with_10_logs):
+        assert reporter_with_10_logs.is_in_alert_state(10, 1) == [True, 1]
         
     def test_get_stats_for_window(self, reporter_with_10_logs):
         #not an ideal test, unit tests should only test 1 thing and we are making many assertions
@@ -67,12 +67,12 @@ class TestLogReporter:
         assert len(reporter_without_retention._logs) == 0
 
     def test_transition_to_alert(self, base_reporter):
-        assert base_reporter.isInAlertState(10,1) == [False, 0]
+        assert base_reporter.is_in_alert_state(10,1) == [False, 0]
         self.addLogsToReporter(base_reporter, 10)
-        assert base_reporter.isInAlertState(10,1) == [True, 1]
+        assert base_reporter.is_in_alert_state(10,1) == [True, 1]
 
     def test_transition_out_of_alert(self, reporter_without_retention):
         self.addLogsToReporter(reporter_without_retention, 10)
-        assert reporter_without_retention.isInAlertState(10,1) == [True, 1]
+        assert reporter_without_retention.is_in_alert_state(10,1) == [True, 1]
         reporter_without_retention.prune_logs()
-        assert reporter_without_retention.isInAlertState(10,1) == [False, 0]
+        assert reporter_without_retention.is_in_alert_state(10,1) == [False, 0]

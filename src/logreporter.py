@@ -100,7 +100,7 @@ class LogReporter:
     #alert_threshold is requests per second that should trigger an alert
     #TODO: the return format of this function is a bit of a code smell; it is doing 2 things
     #      and functions should only do 1 thing, it works for now but is worth thinking about
-    def isInAlertState(self, alert_window, alert_threshold):
+    def is_in_alert_state(self, alert_window, alert_threshold):
         requests_per_second = self.get_request_per_second_for_window(alert_window)
         if requests_per_second >= alert_threshold:
             return [True, requests_per_second]
