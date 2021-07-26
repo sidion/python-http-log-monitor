@@ -44,8 +44,8 @@ class TestLogReporter:
         log = log_parser('127.0.0.1 - james [09/May/2018:16:00:39 +0000] "GET /report HTTP/1.0" 200 123')
         assert base_reporter.add_log(log)
 
-    def test_getRequestPerSecondForWindow(self, reporter_with_10_logs):
-        assert reporter_with_10_logs.getRequestPerSecondForWindow(10) == 1
+    def test_get_request_per_second_for_window(self, reporter_with_10_logs):
+        assert reporter_with_10_logs.get_request_per_second_for_window(10) == 1
 
     def test_isInAlertState(self, reporter_with_10_logs):
         assert reporter_with_10_logs.isInAlertState(10, 1) == [True, 1]

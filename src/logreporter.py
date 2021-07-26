@@ -84,7 +84,7 @@ class LogReporter:
         return stats
 
     #window should be an int which is the number of seconds in the window
-    def getRequestPerSecondForWindow(self, window) -> int:
+    def get_request_per_second_for_window(self, window) -> int:
         end_of_window = datetime.datetime.now() - datetime.timedelta(seconds=window)
         logs_not_counted = 0
         for log in reversed(self._logs):
@@ -101,7 +101,7 @@ class LogReporter:
     #TODO: the return format of this function is a bit of a code smell; it is doing 2 things
     #      and functions should only do 1 thing, it works for now but is worth thinking about
     def isInAlertState(self, alert_window, alert_threshold):
-        requests_per_second = self.getRequestPerSecondForWindow(alert_window)
+        requests_per_second = self.get_request_per_second_for_window(alert_window)
         if requests_per_second >= alert_threshold:
             return [True, requests_per_second]
         return [False, 0]
