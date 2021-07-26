@@ -39,7 +39,7 @@ class LogReporter:
 
     #return a Dict of intersting data for the window
     #window should a int which is the number of seconds in the window
-    def getStatsForWindow(self, window):
+    def get_stats_for_window(self, window):
         end_of_window = datetime.datetime.now() - datetime.timedelta(seconds=window)
         stats = {}
         stats['number_of_requests'] = 0

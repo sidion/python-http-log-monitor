@@ -50,10 +50,10 @@ class TestLogReporter:
     def test_isInAlertState(self, reporter_with_10_logs):
         assert reporter_with_10_logs.isInAlertState(10, 1) == [True, 1]
         
-    def test_getStatsForWindow(self, reporter_with_10_logs):
+    def test_get_stats_for_window(self, reporter_with_10_logs):
         #not an ideal test, unit tests should only test 1 thing and we are making many assertions
         #getting closer to a functional test which might be better to move into a different file/suite
-        stats = reporter_with_10_logs.getStatsForWindow(10)
+        stats = reporter_with_10_logs.get_stats_for_window(10)
         assert stats['number_of_requests'] == 10
         assert stats['total_get_requests'] == 10
         assert stats['total_post_requests'] == 0
